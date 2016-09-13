@@ -50,7 +50,7 @@ class ScrollRefresh extends React.Component {
     </div>;
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.fetchNextData();
   }
 
