@@ -1,6 +1,6 @@
 {
   "name": "react-scrollrefresh",
-  "version": "0.9.1",
+  "version": "0.9.3",
   "description": "React ScrollRefresh is a React component which enables refresh via scoll",
   "main": "index.js",
   "files": [
@@ -8,7 +8,11 @@
     "lib"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dist": "webpack",
+    "serve": "node server.js --env=dev",
+    "serve:dist": "node server.js --env=dist",
+    "start": "node server.js --env=dev"
   },
   "repository": {
     "type": "git",
@@ -34,7 +38,10 @@
     "babel-loader": "^6.2.5",
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-react": "^6.11.1",
-    "webpack": "^1.13.2"
+    "bower-webpack-plugin": "^0.1.9",
+    "react-hot-loader": "^3.0.0-beta.3",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.1"
   },
   "publishConfig": {
     "registry": "http://registry.npmjs.org"

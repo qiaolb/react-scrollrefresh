@@ -36,7 +36,7 @@ class ScrollRefresh extends React.Component {
     let loading = null;
     if (this.state.loading) {
       if (this.props.loading) {
-        loading == this.props.loading;
+        loading = this.props.loading;
       } else {
         loading = <div>loading...</div>;
       }
