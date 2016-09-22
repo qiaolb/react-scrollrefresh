@@ -16,6 +16,7 @@
  *      synch，boolean，是否同步执行数据查询，缺省：false
  *      nextData，Array，异步（synch=false）时，通过nextData通知组件数据更新，这个数据只包含当前页的数据。
  *      loading，React Component， 自定义loading
+ *      pageLoadFinish, 页数据加载完成回调，可以用于加载后nextData清除
  */
 import React, {PropTypes} from "react";
 
@@ -27,7 +28,6 @@ class ScrollRefresh extends React.Component {
       data: [],
       currentPos: 0,
       pageNo: 1,
-      hasMore: false,
       loading: false
     };
   }
@@ -66,8 +66,7 @@ class ScrollRefresh extends React.Component {
 
   fetchNextData() {
     if (!this.state.loading) {
-      this.state.loading = true;
-      this.setState(this.state);
+      this.setState({loading: true});
 
       let nextData = this.props.fetchNextData(this.state.currentPos, this.state.pageNo);
       if (this.props.synch) {
@@ -85,6 +84,11 @@ class ScrollRefresh extends React.Component {
   }
 
   setNextData(nextData) {
+    if ('function' == typeof this.props.pageLoadFinish) {
+      this.props.pageLoadFinish(this.state.pageNo);
+    }
+
+
     if (nextData && nextData.length > 0) {
       this.state.currentPos += nextData.length;
       this.state.pageNo++;

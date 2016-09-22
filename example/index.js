@@ -10,16 +10,29 @@ class App extends React.Component {
 
   render() {
     let loading = <div>加载中。。。。。</div>
+    let data = [];
+    this.state.nextData.map(item => {
+      data.push(item);
+    });
     return (
       <ScrollRefresh height={150} width={300}
                      fetchNextData={this.fetchNextData.bind(this)}
                      nextData={this.state.nextData}
-                     loading={loading}/>
+                     loading={loading}
+                     pageLoadFinish={(pageNo) => {
+                       console.log(pageNo);
+                       console.log(this.state.nextData);
+                     }}/>
     );
   }
 
   fetchNextData(currentPos, pageNo) {
     setTimeout(() => {
+      if (pageNo > 4) {
+        this.setState({nextData: []});
+        return;
+      }
+
       this.state.nextData = [
         `${currentPos}.1`,
         `${currentPos}.2`,

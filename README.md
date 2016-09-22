@@ -17,6 +17,7 @@ npm install react-scrollrefresh --save
 | synch        | boolean                      | 是否同步执行数据查询，缺省：false|
 | nextData     | Array                        | 异步（synch=false）时，通过nextData通知组件数据更新，这个数据只包含当前页的数据。|
 | loading      | React Component              | 自定义loading |
+| pageLoadFinish| function(pageNo)            | 页数据加载完成回调，可以用于加载后nextData清除 |
 
 
 ## example
