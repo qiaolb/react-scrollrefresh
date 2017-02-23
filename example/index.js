@@ -14,19 +14,20 @@ class App extends React.Component {
     this.state.nextData.map(item => {
       data.push(item);
     });
+    console.log('render....');
     return (
       <ScrollRefresh height={150} width={300}
                      fetchNextData={this.fetchNextData.bind(this)}
                      nextData={this.state.nextData}
                      loading={loading}
                      pageLoadFinish={(pageNo) => {
-                       console.log(pageNo);
-                       console.log(this.state.nextData);
+                       console.log('page:', pageNo, 'data:', this.state.nextData);
                      }}/>
     );
   }
 
   fetchNextData(currentPos, pageNo) {
+    console.log('fetch next data....');
     setTimeout(() => {
       if (pageNo > 4) {
         this.setState({nextData: []});
@@ -45,8 +46,9 @@ class App extends React.Component {
         `${currentPos}.9`,
         `${currentPos}.10`];
       this.setState(this.state);
-    }, 2000)
 
+      console.log('fetched next data!');
+    }, 2000);
   }
 }
 

@@ -19,7 +19,7 @@
  *      pageLoadFinish, 页数据加载完成回调，可以用于加载后nextData清除
  */
 import React, {PropTypes} from "react";
-
+import _ from "lodash";
 
 class ScrollRefresh extends React.Component {
   constructor(props) {
@@ -77,7 +77,7 @@ class ScrollRefresh extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.synch) {
-      if (null != nextProps.nextData && nextProps.nextData != this.props.nextData) {
+      if (!_.isEqual(nextProps.nextData, this.props.nextData)) {
         this.setNextData(nextProps.nextData);
       }
     }
@@ -88,8 +88,7 @@ class ScrollRefresh extends React.Component {
       this.props.pageLoadFinish(this.state.pageNo);
     }
 
-
-    if (nextData && nextData.length > 0) {
+    if (!_.isEmpty(nextData)) {
       this.state.currentPos += nextData.length;
       this.state.pageNo++;
       this.state.data = this.state.data.concat(nextData);

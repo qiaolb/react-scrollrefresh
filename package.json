@@ -1,6 +1,6 @@
 {
   "name": "react-scrollrefresh",
-  "version": "0.9.4",
+  "version": "0.9.6",
   "description": "React ScrollRefresh is a React component which enables refresh via scoll",
   "main": "index.js",
   "files": [
@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/qiaolb/react-scrollrefresh#readme",
   "dependencies": {
+    "lodash": "^4.17.4",
     "react": "^15.0.0"
   },
   "devDependencies": {
