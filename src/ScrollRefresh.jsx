@@ -18,8 +18,8 @@
  *      loading，React Component， 自定义loading
  *      pageLoadFinish, 页数据加载完成回调，可以用于加载后nextData清除
  */
-import React, {PropTypes} from "react";
-import _ from "lodash";
+import React, { PropTypes } from 'react';
+import _ from 'lodash';
 
 class ScrollRefresh extends React.Component {
   constructor(props) {
@@ -28,7 +28,8 @@ class ScrollRefresh extends React.Component {
       data: [],
       currentPos: 0,
       pageNo: 1,
-      loading: false
+      loading: false,
+      finished: false
     };
   }
 
@@ -55,7 +56,7 @@ class ScrollRefresh extends React.Component {
   }
 
   scrollHandle(e) {
-    if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
+    if (!this.state.finished && e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
       this.fetchNextData();
     }
   }
@@ -79,11 +80,18 @@ class ScrollRefresh extends React.Component {
     if (!this.props.synch) {
       if (!_.isEqual(nextProps.nextData, this.props.nextData)) {
         this.setNextData(nextProps.nextData);
+      } else if (_.isEmpty(nextProps.nextData) && this.state.loading) {
+        this.setState({loading: false});
       }
     }
   }
 
   setNextData(nextData) {
+    if (this.state.finished) {
+      this.state.loading && this.setState({loading: false});
+      return;
+    }
+
     if ('function' == typeof this.props.pageLoadFinish) {
       this.props.pageLoadFinish(this.state.pageNo);
     }
@@ -92,6 +100,8 @@ class ScrollRefresh extends React.Component {
       this.state.currentPos += nextData.length;
       this.state.pageNo++;
       this.state.data = this.state.data.concat(nextData);
+    } else {
+      this.state.finished = true;
     }
 
     this.state.loading = false;
