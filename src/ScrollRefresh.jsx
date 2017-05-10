@@ -17,6 +17,7 @@
  *      nextData，Array，异步（synch=false）时，通过nextData通知组件数据更新，这个数据只包含当前页的数据。
  *      loading，React Component， 自定义loading
  *      pageLoadFinish, 页数据加载完成回调，可以用于加载后nextData清除
+ *      renderItem, function(item, index)，自定义Item
  */
 import React, { PropTypes } from 'react';
 import _ from 'lodash';
@@ -44,9 +45,7 @@ class ScrollRefresh extends React.Component {
     }
     return <div style={{height: this.props.height, width: this.props.width, overflow: 'auto'}}
                 onScroll={this.scrollHandle.bind(this)}>
-      { this.state.data.map((item, index) => {
-        return <div key={index}>{item}</div>
-      })}
+      { this.state.data.map((item, index) => this.renderItem(item, index))}
       {loading}
     </div>;
   }
@@ -62,7 +61,7 @@ class ScrollRefresh extends React.Component {
   }
 
   renderItem(item, index) {
-    return <div key={index}>{item.key}</div>;
+    return this.props.renderItem ? this.props.renderItem(item, index) : <div key={index}>{item}</div>;
   }
 
   fetchNextData() {

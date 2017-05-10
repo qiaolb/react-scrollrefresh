@@ -22,7 +22,8 @@ class App extends React.Component {
                      loading={loading}
                      pageLoadFinish={(pageNo) => {
                        console.log('page:', pageNo, 'data:', this.state.nextData);
-                     }}/>
+                     }}
+                     renderItem={(item, index) => <div key={index}><b>{item}</b></div>}/>
     );
   }
 
