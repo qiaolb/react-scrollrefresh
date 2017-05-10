@@ -24,7 +24,7 @@ class App extends React.Component {
                        console.log('page:', pageNo, 'data:', this.state.nextData);
                      }}
                      renderItem={(item, index) => <div key={index}><b>{item}</b></div>}
-                     renderNoDate={() => <div>No Data</div>}
+                     renderNoData={() => <div>No Data</div>}
                      wrapper="div"/>
     );
   }

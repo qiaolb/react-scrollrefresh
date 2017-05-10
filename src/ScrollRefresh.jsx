@@ -18,7 +18,7 @@
  *      loading，React Component， 自定义loading
  *      pageLoadFinish, 页数据加载完成回调，可以用于加载后nextData清除
  *      renderItem, function(item, index)，自定义Item
- *      renderNoDate, function(), 自定义无数据界面
+ *      renderNoData, function(), 自定义无数据界面
  *      wrapper, String, 包装组件，缺省'div'
  *      wrapperClassName, String, 包装组件ClassName
  */
@@ -50,7 +50,7 @@ class ScrollRefresh extends React.Component {
     }
 
     if (isEmpty(this.state.data)) {
-      return this.props.renderNoDate ? this.props.renderNoDate() : null;
+      return this.props.renderNoData ? this.props.renderNoData() : null;
     } else {
       return React.createElement(
         this.props.wrapper || 'div',
