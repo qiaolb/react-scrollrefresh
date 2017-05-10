@@ -16,14 +16,15 @@ class App extends React.Component {
     });
     console.log('render....');
     return (
-      <ScrollRefresh height={150} width={300}
+      <ScrollRefresh height={"80%"} width={"300px"}
                      fetchNextData={this.fetchNextData.bind(this)}
                      nextData={this.state.nextData}
                      loading={loading}
                      pageLoadFinish={(pageNo) => {
                        console.log('page:', pageNo, 'data:', this.state.nextData);
                      }}
-                     renderItem={(item, index) => <div key={index}><b>{item}</b></div>}/>
+                     renderItem={(item, index) => <div key={index}><b>{item}</b></div>}
+                     wrapper="div"/>
     );
   }
 
