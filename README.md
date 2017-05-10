@@ -19,6 +19,7 @@ npm install react-scrollrefresh --save
 | loading      | React Component              | 自定义loading |
 | pageLoadFinish| function(pageNo)            | 页数据加载完成回调，可以用于加载后nextData清除 |
 | renderItem   | function(item, index)        | 自定义Item   |
+| renderNoDate | function                     | 自定义无数据界面  |
 | wrapper      | String                       | 包装组件，缺省'div' |
 | wrapperClassName| String                    | 包装组件ClassName  |
 

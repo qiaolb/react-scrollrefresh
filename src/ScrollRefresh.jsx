@@ -18,11 +18,14 @@
  *      loading，React Component， 自定义loading
  *      pageLoadFinish, 页数据加载完成回调，可以用于加载后nextData清除
  *      renderItem, function(item, index)，自定义Item
+ *      renderNoDate, function(), 自定义无数据界面
  *      wrapper, String, 包装组件，缺省'div'
  *      wrapperClassName, String, 包装组件ClassName
  */
-import React, { PropTypes } from 'react';
-import _ from 'lodash';
+import React from 'react';
+import isEqual from 'lodash/isequal';
+import isEmpty from 'lodash/isempty';
+import PropTypes from 'prop-types';
 
 class ScrollRefresh extends React.Component {
   constructor(props) {
@@ -46,16 +49,20 @@ class ScrollRefresh extends React.Component {
       }
     }
 
-    return React.createElement(
-      this.props.wrapper || 'div',
-      {
-        className: this.props.wrapperClassName,
-        style: { height: this.props.height, width: this.props.width, overflow: 'auto' },
-        onScroll: this.scrollHandle.bind(this)
-      },
-      this.state.data.map((item, index) => this.renderItem(item, index)),
-      loading
-    );
+    if (isEmpty(this.state.data)) {
+      return this.props.renderNoDate ? this.props.renderNoDate() : null;
+    } else {
+      return React.createElement(
+        this.props.wrapper || 'div',
+        {
+          className: this.props.wrapperClassName,
+          style: {height: this.props.height, width: this.props.width, overflow: 'auto'},
+          onScroll: this.scrollHandle.bind(this)
+        },
+        this.state.data.map((item, index) => this.renderItem(item, index)),
+        loading
+      );
+    }
   }
 
   componentDidMount() {
@@ -85,9 +92,9 @@ class ScrollRefresh extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.synch) {
-      if (!_.isEqual(nextProps.nextData, this.props.nextData)) {
+      if (!isEqual(nextProps.nextData, this.props.nextData)) {
         this.setNextData(nextProps.nextData);
-      } else if (_.isEmpty(nextProps.nextData) && this.state.loading) {
+      } else if (isEmpty(nextProps.nextData) && this.state.loading) {
         this.setState({loading: false});
       }
     }
@@ -103,7 +110,7 @@ class ScrollRefresh extends React.Component {
       this.props.pageLoadFinish(this.state.pageNo);
     }
 
-    if (!_.isEmpty(nextData)) {
+    if (!isEmpty(nextData)) {
       this.state.currentPos += nextData.length;
       this.state.pageNo++;
       this.state.data = this.state.data.concat(nextData);
