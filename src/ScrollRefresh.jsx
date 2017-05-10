@@ -16,7 +16,7 @@
  *      synch，boolean，是否同步执行数据查询，缺省：false
  *      nextData，Array，异步（synch=false）时，通过nextData通知组件数据更新，这个数据只包含当前页的数据。
  *      loading，React Component， 自定义loading
- *      pageLoadFinish, 页数据加载完成回调，可以用于加载后nextData清除
+ *      pageLoadFinish, 页数据加载完成回调，可以用于加载后nextData清除，如果清空nextData，需要设置为null
  *      renderItem, function(item, index)，自定义Item
  *      renderNoData, function(), 自定义无数据界面
  *      wrapper, String, 包装组件，缺省'div'
@@ -66,7 +66,7 @@ class ScrollRefresh extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchNextData();
+    setTimeout(this.fetchNextData(), 50);
   }
 
   scrollHandle(e) {
@@ -93,7 +93,10 @@ class ScrollRefresh extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (!this.props.synch) {
       if (!isEqual(nextProps.nextData, this.props.nextData)) {
-        this.setNextData(nextProps.nextData);
+        // 这里通过null来清空nextData
+        if (nextProps.nextData !== null) {
+          this.setNextData(nextProps.nextData);
+        }
       } else if (isEmpty(nextProps.nextData) && this.state.loading) {
         this.setState({loading: false});
       }
@@ -106,10 +109,6 @@ class ScrollRefresh extends React.Component {
       return;
     }
 
-    if ('function' == typeof this.props.pageLoadFinish) {
-      this.props.pageLoadFinish(this.state.pageNo);
-    }
-
     if (!isEmpty(nextData)) {
       this.state.currentPos += nextData.length;
       this.state.pageNo++;
@@ -120,6 +119,11 @@ class ScrollRefresh extends React.Component {
 
     this.state.loading = false;
     this.setState(this.state);
+
+
+    if ('function' == typeof this.props.pageLoadFinish) {
+      this.props.pageLoadFinish(this.state.pageNo);
+    }
   }
 }
 
