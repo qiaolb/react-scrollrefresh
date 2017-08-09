@@ -21,6 +21,7 @@
  *      renderNoData, function(), 自定义无数据界面
  *      wrapper, String, 包装组件，缺省'div'
  *      wrapperClassName, String, 包装组件ClassName
+ *      reset, boolean, 重置数据，如果为true，会清除之前的数据。缺省为false
  */
 import React from 'react';
 import isEqual from 'lodash/isequal';
@@ -34,14 +35,14 @@ class ScrollRefresh extends React.Component {
       data: [],
       currentPos: 0,
       pageNo: 1,
-      loading: false,
       finished: false
     };
+    this.loading = false;
   }
 
   render() {
     let loading = null;
-    if (this.state.loading) {
+    if (this.loading) {
       if (this.props.loading) {
         loading = this.props.loading;
       } else {
@@ -79,13 +80,14 @@ class ScrollRefresh extends React.Component {
     return this.props.renderItem ? this.props.renderItem(item, index) : <div key={index}>{item}</div>;
   }
 
-  fetchNextData() {
-    if (!this.state.loading) {
-      this.setState({loading: true});
+  fetchNextData(reset = false) {
+    if (!this.loading) {
+      // this.setState({loading: true});
+      this.loading = true;
 
-      let nextData = this.props.fetchNextData(this.state.currentPos, this.state.pageNo);
+      let nextData = this.props.fetchNextData(reset ? 0 : this.state.currentPos, reset ? 1 : this.state.pageNo);
       if (this.props.synch) {
-        this.setNextData(nextData);
+        this.setNextData(nextData, reset);
       }
     }
   }
@@ -97,27 +99,45 @@ class ScrollRefresh extends React.Component {
         if (nextProps.nextData !== null) {
           this.setNextData(nextProps.nextData);
         }
-      } else if (isEmpty(nextProps.nextData) && this.state.loading) {
-        this.setState({loading: false});
+      } else if (isEmpty(nextProps.nextData) && this.loading) {
+        // this.setState({loading: false});
+        this.loading = false;
       }
+    }
+
+    if (nextProps.reset === true) {
+      this.fetchNextData(true);
     }
   }
 
-  setNextData(nextData) {
-    if (this.state.finished) {
-      this.state.loading && this.setState({loading: false});
+  setNextData(nextData, reset = false) {
+    if (this.state.finished && !reset) {
+      // this.state.loading && this.setState({loading: false});
+      this.loading = false;
       return;
     }
 
     if (!isEmpty(nextData)) {
-      this.state.currentPos += nextData.length;
-      this.state.pageNo++;
-      this.state.data = this.state.data.concat(nextData);
+      if (reset) {
+        this.state.data = nextData;
+        this.state.pageNo = 1;
+        this.state.currentPos = 0;
+        this.state.finished = false;
+      } else {
+        this.state.data = this.state.data.concat(nextData);
+        this.state.currentPos += nextData.length;
+        this.state.pageNo++;
+      }
     } else {
       this.state.finished = true;
+
+      if (reset) {
+        this.state.data = [];
+      }
     }
 
-    this.state.loading = false;
+    // this.state.loading = false;
+    this.loading = false;
     this.setState(this.state);
 
 
